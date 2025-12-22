@@ -17,7 +17,11 @@ import http from 'node:http' // importação modulos internos
 //PATCH => Atualizar uma informação específica  de um recurso no back-end 
 //DELETE =>Deletar um recurso do back-end.
 
+//stateful: dados de memoria armazenado localmente - stateless
 
+//JSON - JavaScript Object Notation
+
+const users = []
 //criando servidor
 const server = http.createServer((req, res) => { // recebe dois parametros (request , response)
     
@@ -26,9 +30,16 @@ const server = http.createServer((req, res) => { // recebe dois parametros (requ
 
     if(method =='GET' && url == '/users'){
         //Early return
-        return res.end('Listagem de Usuarios')
+        return res
+         .setHeader('Content-type', 'application/json')//cabeçalhos
+         .end(JSON.stringify(users))
     }
     if(method == 'POST' && url == '/users'){
+        users.push({ //criando usuário
+            id:1,
+            name:'John doe',
+            email:'Johndoe@example.com',
+        })
         return res.end('Criação de Usuarios')
     }
 
