@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => { // recebe dois parametros (requ
         //Early return
         return res
          .setHeader('Content-type', 'application/json')//cabeçalhos
-         .end(JSON.stringify(users))
+         .end(JSON.stringify(users))//Converte um objeto ou array JavaScript em texto JSON
     }
     if(method == 'POST' && url == '/users'){
         users.push({ //criando usuário
