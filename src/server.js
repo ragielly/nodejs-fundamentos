@@ -23,10 +23,24 @@ import http from 'node:http' // importação modulos internos
 
 const users = []
 //criando servidor
-const server = http.createServer((req, res) => { // recebe dois parametros (request , response)
-    
+const server = http.createServer(async(req, res) => { // recebe dois parametros (request , response)
     const {method,url} = req //desestruturação de objeto
     //console.log(method,url)//imprime no terminal qual método e qual rota foram chamadas.
+    
+    const buffers = [] // cria um array de buffers / pedacinhos 
+
+    for await (const chunk of req){// permite percorrer cada pedacinho e 
+        buffers.push(chunk) // adicionar esses pedacinhos no array de buffers
+    }
+
+    
+    try{
+        req.body =JSON.parse(Buffer.concat(buffers).toString()) // transformar em json
+        
+    }catch{
+        req.body=null // se tiver vazio , define como null
+
+    }
 
     if(method =='GET' && url == '/users'){
         //Early return
@@ -35,10 +49,11 @@ const server = http.createServer((req, res) => { // recebe dois parametros (requ
          .end(JSON.stringify(users))//Converte um objeto ou array JavaScript em texto JSON
     }
     if(method == 'POST' && url == '/users'){
+        const{name,email}=req.body 
         users.push({ //criando usuário
             id:1,
-            name:'John doe',
-            email:'Johndoe@example.com',
+            name:name,
+            email:email,
         })
         return res.end('Criação de Usuarios')
     }
