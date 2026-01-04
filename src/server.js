@@ -1,5 +1,6 @@
 import http from 'node:http' // importação modulos internos
 import { json } from './middlewares/json.js'
+import { DataBase } from './middlewares/database.js'
 
 // -Criar usuários
 // -Listagem usuários
@@ -22,7 +23,7 @@ import { json } from './middlewares/json.js'
 
 //JSON - JavaScript Object Notation
 
-const users = []
+const database = new DataBase
 //criando servidor
 const server = http.createServer(async(req, res) => { // recebe dois parametros (request , response)
     const {method,url} = req //desestruturação de objeto
@@ -30,18 +31,19 @@ const server = http.createServer(async(req, res) => { // recebe dois parametros 
     await json(req,res)
 
     if(method =='GET' && url == '/users'){
+        const user = database.select('users')
         //Early return
-        return res
-         .setHeader('Content-type', 'application/json')//cabeçalhos
-         .end(JSON.stringify(users))//Converte um objeto ou array JavaScript em texto JSON
+        return res.end(JSON.stringify(user))//Converte um objeto ou array JavaScript em texto JSON
     }
     if(method == 'POST' && url == '/users'){
         const{name,email}=req.body 
-        users.push({ //criando usuário
+       const user ={ //criando usuário
             id:1,
             name:name,
             email:email,
-        })
+        }
+
+        database.insert('users',user)
         return res.end('Criação de Usuarios')
     }
 
