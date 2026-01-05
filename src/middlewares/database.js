@@ -1,5 +1,26 @@
+import fs from 'node:fs/promises'
+
+const databasePath = new URL('../db.json',import.meta.url)
+
+
+
 export class DataBase{
     #database = {}
+
+    constructor(){
+        fs.readFile(databasePath, 'utf8')
+         .then(data => {
+            this.#database = JSON.parse(data)
+         })
+         .catch(()=>{
+            this.#persist()
+         })
+    }
+    //metodo privado responsavel por salvar os dados no arquivo
+    #persist(){
+        // Converte o objeto JavaScript em string JSON e grava no arquivo db.json
+        fs.writeFile(databasePath, JSON.stringify(this.#database))
+    }
 
     select(table){ //listar tabela
 
@@ -17,6 +38,9 @@ export class DataBase{
         }else{
             this.#database[table] = data
         }
-        return data
+
+        this.#persist();
+        
+        return data;
     }
 }
