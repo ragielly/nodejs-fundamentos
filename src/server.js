@@ -1,5 +1,6 @@
 import http from 'node:http' // importação modulos internos
 import { json } from './middlewares/json.js'
+import {randomUUID} from 'node:crypto'
 import { DataBase } from './middlewares/database.js'
 
 // -Criar usuários
@@ -38,7 +39,7 @@ const server = http.createServer(async(req, res) => { // recebe dois parametros 
     if(method == 'POST' && url == '/users'){
         const{name,email}=req.body 
        const user ={ //criando usuário
-            id:1,
+            id:randomUUID(),
             name:name,
             email:email,
         }
