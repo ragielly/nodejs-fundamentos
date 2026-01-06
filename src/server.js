@@ -1,7 +1,6 @@
 import http from 'node:http' // importação modulos internos
 import { json } from './middlewares/json.js'
-import {randomUUID} from 'node:crypto'
-import { DataBase } from './middlewares/database.js'
+import {routes} from './routes.js'
 
 // -Criar usuários
 // -Listagem usuários
@@ -24,31 +23,22 @@ import { DataBase } from './middlewares/database.js'
 
 //JSON - JavaScript Object Notation
 
-const database = new DataBase
+
 //criando servidor
 const server = http.createServer(async(req, res) => { // recebe dois parametros (request , response)
     const {method,url} = req //desestruturação de objeto
     //console.log(method,url)//imprime no terminal qual método e qual rota foram chamadas.
     await json(req,res)
 
-    if(method =='GET' && url == '/users'){
-        const user = database.select('users')
-        //Early return
-        return res.end(JSON.stringify(user))//Converte um objeto ou array JavaScript em texto JSON
-    }
-    if(method == 'POST' && url == '/users'){
-        const{name,email}=req.body 
-       const user ={ //criando usuário
-            id:randomUUID(),
-            name:name,
-            email:email,
-        }
+    const route = routes.find(route =>{
+        return route.method == method && route.path == url
+    })
 
-        database.insert('users',user)
-        return res.end('Criação de Usuarios')
+    if(route){
+        return route.handler(req,res)
     }
-
-    return res.end('Hello World') // retornar mensagem
+    
+    return res.writable(404).end()
 })
 
 server.listen(3333) // servidor ouça a porta 3333
