@@ -1,12 +1,13 @@
 import {randomUUID} from 'node:crypto'
 import { DataBase } from './database.js'
+import { buildRoutePath } from './utils/build-route-path.js'
 
 const database = new DataBase
 //criar um array de rotas
 export const routes = [
 {
     method:'GET',
-    path: '/users',
+    path: buildRoutePath('/users'),
     handler:(req,res) =>{
         const user = database.select('users')
         //Early return
@@ -16,7 +17,7 @@ export const routes = [
 },
 {
     method:'POST',
-    path: '/users',
+    path: buildRoutePath('/users'),
     handler:(req,res) =>{
        const{name,email}=req.body 
        const user ={ //criando usuário
@@ -28,5 +29,12 @@ export const routes = [
         database.insert('users',user)
         return res.end('Criação de Usuarios')
     }
-}
+},
+{
+    method:'DELETE',
+    path: buildRoutePath('/users/:id'),
+    handler:(req,res) =>{
+        return res.end()
+    }
+},
 ]
