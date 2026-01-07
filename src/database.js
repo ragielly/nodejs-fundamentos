@@ -32,12 +32,11 @@ export class DataBase{
     insert(table,data){ //inserir usuario
 
         // Verifica se já existe uma tabela e se ela é um array
-        if(Array.isArray(this.#database[table])){ 
-             // Se for um array, adiciona o novo dado ao final
-            this.#database[table].push(data)
-        }else{
-            this.#database[table] = data
+        if(!Array.isArray(this.#database[table])){ 
+            this.#database[table] = []    
         }
+            
+        this.#database[table].push(data)
 
         this.#persist();
         
