@@ -1,6 +1,7 @@
 import http from 'node:http' // importação modulos internos
 import { json } from './middlewares/json.js'
 import {routes} from './routes.js'
+import { extractQueryParams } from './utils/extract-query-params.js'
 
 // GET, POST, PUT, PATCH, DELETE
 //GET => Busca um recurso do back-end
@@ -27,9 +28,9 @@ const server = http.createServer(async(req, res) => { // recebe dois parametros 
         //testa a URL com a regex da rota e extrai os parâmetros da URL
         const routeParams = req.url.match(route.path)
 
+        console.log(extractQueryParams(routeParams.groups.query))
         req.params = { ...routeParams.groups }//pegar o id
 
-        
 
         return route.handler(req,res)
     }
