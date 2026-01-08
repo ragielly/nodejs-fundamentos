@@ -42,4 +42,13 @@ export class DataBase{
         
         return data;
     }
+    delete(table,id){ //deletar usuario
+        //percorrendo para saber se tem o id que será deletado
+        const rowIndex = this.#database[table].findIndex(row => row.id == id)//retorna o indice
+
+        if(rowIndex > -1){ //retorna -1 se não encontrado
+            this.#database[table].splice(rowIndex,1)//remove uma linha
+            this.#persist()
+        }
+    }
 }

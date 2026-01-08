@@ -27,14 +27,18 @@ export const routes = [
         }
 
         database.insert('users',user)
-        return res.end('Criação de Usuarios')
+        return res.writeHead(201).end()
     }
 },
 {
     method:'DELETE',
     path: buildRoutePath('/users/:id'),
     handler:(req,res) =>{
-        return res.end()
+
+        const {id} = req.params //égar o id
+
+        database.delete('users',id) //chamar o delete
+        return res.writeHead(204).end()
     }
 },
 ]

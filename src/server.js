@@ -2,7 +2,6 @@ import http from 'node:http' // importação modulos internos
 import { json } from './middlewares/json.js'
 import {routes} from './routes.js'
 
-
 // GET, POST, PUT, PATCH, DELETE
 //GET => Busca um recurso do back-end
 //POST => Cria um recurso do back-end
@@ -13,7 +12,6 @@ import {routes} from './routes.js'
 //stateful: dados de memoria armazenado localmente - stateless
 
 //JSON - JavaScript Object Notation
-
 
 //criando servidor
 const server = http.createServer(async(req, res) => { // recebe dois parametros (request , response)
@@ -26,9 +24,12 @@ const server = http.createServer(async(req, res) => { // recebe dois parametros 
     })
 
     if(route){
+        //testa a URL com a regex da rota e extrai os parâmetros da URL
         const routeParams = req.url.match(route.path)
 
-        console.log(routeParams)
+        req.params = { ...routeParams.groups }//pegar o id
+
+        
 
         return route.handler(req,res)
     }
