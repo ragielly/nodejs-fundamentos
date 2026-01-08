@@ -31,12 +31,28 @@ export const routes = [
     }
 },
 {
+    method:'PUT',
+    path: buildRoutePath('/users/:id'),
+    handler:(req,res) =>{
+
+        const {id} = req.params //Pegar o id
+        const{name,email} =  req.body // dados que vao ser atualizados
+
+
+        database.update('users', id, {
+            name,
+            email,
+        }) 
+        return res.writeHead(204).end()
+    }
+},
+{
     method:'DELETE',
     path: buildRoutePath('/users/:id'),
     handler:(req,res) =>{
 
-        const {id} = req.params //égar o id
-
+        const {id} = req.params //pegar o id
+        
         database.delete('users',id) //chamar o delete
         return res.writeHead(204).end()
     }
